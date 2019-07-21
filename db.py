@@ -1,9 +1,11 @@
 import json
 import psycopg2
 import config
-from time import time, ctime
+from random import choice
+from time import time
 
-polls = {}
+themes = {}
+last_id = {}
 
 def conn():
     return psycopg2.connect(f'dbname={config.db_name}  user={config.db_user} password={config.db_password} host={config.db_ip}')
@@ -17,40 +19,50 @@ def exec(ask):
 def new_user(tel_id, name):
     exec(f"INSERT INTO users (tel_id, name) VALUES ('{tel_id}','{name}'")
 
-def set_admin(tel_id, secret_key):
-    if secret_key == config.secret_key:
-        exec(f"UPDATE users SET admin=1 WHERE tel_id='{tel_id}'")
-
-def gen_poll(question_id):
-    return [exec(f'SELECT quest FROM question WHERE id = {question_id}').fetchone()[0]] + exec(f'SELECT ans FROM answer WHERE quest_id = {question_id}')
-
-def list_polls():
-    #make new list of questions by gen_poll
-    return [1, [], [], []]
-
-def cur_quest(tel_id):
-    return polls[tel_id][polls[tel_id][0]]
+def is_user(tel_id):
+    user = exec(f"SELECT * FROM users WHERE tel_id='{tel_id}'")
+    if user:
+        return True
+    else:
+        return False
 
 def start_poll(tel_id):
-    if exec(f"SELECT * FROM users WHERE tel_id='{tel_id}'").fetchone():
-        if tel_id not in polls:
-            if len(polls[tel_id])>=polls[tel_id][0]+1:
-                polls[tel_id] = list_polls()
-                return gen_poll(cur_quest(tel_id))
-            return "-1" #end of poll
-        return "-3" #didnt start poll
-    return "-2" # no such user
-
-def new_question(tel_id, text):
-    if tel_id not in polls:
-        return start_poll(tel_id)
+    if tel_id not in last_id:
+        themes[tel_id] = [new_theme([])]
+        quest, last_id[tel_id]= random_question(themes[tel_id][0])
+        return quest
     else:
-        if text in polls[tel_id]:
-            quest_id = exec(f"SELECT id FROM question WHERE quest = '{cur_quest(tel_id)}'").fecthone()[0]
-            ans_id = exec(f"SELECT id FROM answer WHERE ans = '{text}'").fecthone()[0]
-            exec(f'INSERT INTO user_answer (quest_id, ans_id, time) VALUES ({quest_id}, {ans_id}, {ctime(time())})')
-            polls[tel_id][0] += 1
-            if len(polls[tel_id])>=polls[tel_id][0]+1:
-                return cur_quest(tel_id)
-            else:
-                return "-1"
+        return -1 #done poll
+
+
+def new_theme(old_themes):
+    #return -1 if no more themes
+    themes = exec("SELECT id FROM themes").fetchall()
+    for old_theme in old_themes:
+        themes.remove((old_theme,))
+    if themes:
+        return choice(themes[0])
+    else:
+        return -1
+
+def random_question(theme_id):
+    questions=exec(f"SELECT quest, id FROM questions WHERE theme='{ theme_id }'").fetchall()
+    return choice(questions)
+
+
+def next_question(tel_id, ans):
+    if tel_id in last_id:
+        if ans.isdigit():
+            if int(ans)<=9:
+                if int(ans)>0:
+                    exec(f"INSERT INTO answers (quest_id, ans, time) VALUES ({last_id[tel_id]}, {ans}, {time()})")
+                    theme = new_theme(themes[tel_id])
+                    if theme != -1:
+                        themes[tel_id].append(theme)
+                        quest, last_id[tel_id] = random_question(theme)
+                        return quest
+                    else:
+                        return -1 #done poll
+        return -2 #try again
+    else:
+        return start_poll(tel_id)
