@@ -40,7 +40,7 @@ def user_scatter(tel_id):
         ans, time = zip(*all_data_user(theme[1], tel_id))
         time = list(map(lambda x:datetime.fromtimestamp(x).strftime("%m-%d"), time))
         data.append([theme[0], list(ans), time])
-    return render_template("user.html", data=data)
+    return render_template("user.html", data=data, user=get_user(tel_id))
 
 @app.route("/pie/all_users/<date>")
 def all_users_pie(date):
