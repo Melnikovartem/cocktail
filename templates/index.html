@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+
+<div id=pulse ></div>
+
+<script>
+	PULSE = document.getElementById('pulse');
+    {% if data %}
+      {% for dat in data %}
+      	Plotly.plot( PULSE, [{
+      	y: {{ dat[1] }},
+      	x: [{% for val in dat[2] %}'{{ val }}', {% endfor %}],
+        name: '{{ dat[0] }}'
+          }]);
+        {% endfor %}
+    {% endif %}
+</script>
+</body>
+</html>
