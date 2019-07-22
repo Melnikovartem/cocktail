@@ -26,6 +26,7 @@ def get_user(tel_id):
 def all_users():
     return list(map(lambda x: x[0], exec(f'SELECT tel_id FROM users').fetchall()))
 
+
 def lazy():
     users = all_users()
     for user in last_id:
@@ -59,7 +60,7 @@ def start_poll(tel_id):
 def next_question(tel_id, ans):
     if tel_id in last_id:
         if ans.isdigit():
-            if int(ans)<=9:
+            if int(ans)<=6:
                 if int(ans)>0:
                     exec(f"INSERT INTO answers (quest_id, ans, time, user_id) VALUES ({last_id[tel_id]}, {ans}, {time()}, '{tel_id}')")
                     theme = new_theme(themes[tel_id])

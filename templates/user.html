@@ -3,7 +3,6 @@
 {% block content %}
 <div id=pulse ></div>
 <script>
-
   var updatemenus=[
     {
         buttons: [
@@ -28,17 +27,11 @@
         yanchor: 'top'
     }
 ]
-
-
-
 var layout = {
     autosize: true,
     updatemenus: updatemenus,
   }
-
 	PULSE = document.getElementById('pulse');
-
-
     {% for dat in data %}
       Plotly.plot( PULSE, [{
       y: {{ dat[1] }},
@@ -46,7 +39,6 @@ var layout = {
       name: '{{ dat[0] }}'
     }], layout);
       {% endfor %}
-
 </script>
 
 {% endblock %}
