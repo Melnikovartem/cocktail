@@ -77,7 +77,10 @@ def all_themes():
     return exec("SELECT theme, id FROM themes").fetchall()
 
 def all_data(theme_id):
-    return exec(f'SELECT answers.ans, answers.time, answers.user_id FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE questions.theme_id = {theme_id}').fetchall()
+    return exec(f'SELECT answers.ans, answers.time, answers.user_id FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE questions.theme_id = {theme_id} ORDER BY answers.time').fetchall()
+
+def all_data_user(theme_id, user_id):
+    return exec(f"SELECT answers.ans, answers.time FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE questions.theme_id = {theme_id} AND answers.user_id ='{user_id}' ORDER BY answers.time").fetchall()
 
 def all_data_period(time):
     return exec(f'SELECT answers.ans, answers.user_id, questions.id FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE answers.time>{time} AND answers.time<{time+86400}').fetchall()

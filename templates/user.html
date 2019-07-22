@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h1 class ="title">Данные GoTo!</h1>
 <div id=pulse ></div>
 <script>
 
@@ -39,6 +37,7 @@ var layout = {
   }
 
 	PULSE = document.getElementById('pulse');
+
 
     {% for dat in data %}
       Plotly.plot( PULSE, [{

@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from db import all_themes, all_data, all_data_period, get_user, personal_data_period, get_theme
+from db import all_themes, all_data, all_data_period, get_user, personal_data_period, get_theme, all_data_user
 
 from datetime import datetime
 
@@ -32,28 +32,18 @@ def index():
         data.append([theme[0], ans, time])
     return render_template("index.html", data=data)
 
-@app.route("/all_users")
-def index():
+@app.route("/<tel_id>")
+def user_scatter(tel_id):
     data = []
     themes = all_themes()
     for theme in themes:
-        all = all_data(theme[1])
-        time = []
-        time_count = {}
-        ans =[]
-        for one in all:
-            format_time = datetime.fromtimestamp(one[1]).strftime("%m-%d")
-            if format_time not in time:
-                time.append(format_time)
-                time_count[format_time]=[]
-            time_count[format_time].append(one[0])
-        for time_val in time_count:
-            ans.append(sum(time_count[time_val])/len(time_count[time_val]))
-        data.append([theme[0], ans, time])
-    return render_template("index.html", data=data)
+        ans, time = zip(*all_data_user(theme[1], tel_id))
+        time = list(map(lambda x:datetime.fromtimestamp(x).strftime("%m-%d"), time))
+        data.append([theme[0], list(ans), time])
+    return render_template("user.html", data=data)
 
 @app.route("/pie/all_users/<date>")
-def all_users(date):
+def all_users_pie(date):
     if not(len(date)==10 and match("\d\d\d\d.\d\d.\d\d",date)):
         return "BAD data try 2019.01.01"
     else:
@@ -75,7 +65,7 @@ def all_users(date):
         return render_template("pie.all_users.html", data=data, themes=themes, rows=len(data.keys())//config.cols+(1 if len(data.keys())%config.cols else 0), cols=config.cols , dates=dates)
 
 @app.route("/pie/<tel_id>/<date>")
-def user(tel_id, date):
+def user_pie(tel_id, date):
     if not(len(date)==10 and match("\d\d\d\d.\d\d.\d\d",date)):
         return "BAD data try 2019.01.01"
     else:
