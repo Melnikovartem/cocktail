@@ -48,7 +48,7 @@ def next_question(tel_id, ans):
         if ans.isdigit():
             if int(ans)<=9:
                 if int(ans)>0:
-                    exec(f"INSERT INTO answers (quest_id, ans, time, user_id) VALUES ({last_id[tel_id]}, {ans}, {time()+86400*1}, '{tel_id}')")
+                    exec(f"INSERT INTO answers (quest_id, ans, time, user_id) VALUES ({last_id[tel_id]}, {ans}, {time()}, '{tel_id}')")
                     theme = new_theme(themes[tel_id])
                     if theme != -1:
                         themes[tel_id].append(theme)
