@@ -9,8 +9,8 @@ from random import shuffle
 telebot.apihelper.proxy = {'https': 'socks5h://geek:socks@t.geekclass.ru:7777'}
 token = "969755030:AAH8X0ouUxKZeumKoczlXJG0PFaxzsUR-vQ"
 bot = telebot.TeleBot(token=token)
-stickers = ['\xF0\x9F\x98\xB1', '\xF0\x9F\x98\xA1', '\xF0\x9F\x98\x8E', '\xF0\x9F\x92\xA9', '\xF0\x9F\x92\xAA', '\xF0\x9F\x98\x98']
-
+stickers = [u'U+1F631', '\xF0\x9F\x98\xA1', '\xF0\x9F\x98\x8E', '\xF0\x9F\x92\xA9', '\xF0\x9F\x92\xAA', '\xF0\x9F\x98\x98']
+#stickers = ['%xF0%x9F%x98%xB1', '%xF0%x9F%x98%xA1', '%xF0%x9F%x98%x8E', '%xF0%x9F%x92%xA9', '%xF0%x9F%x92%xAA', '%xF0%x9F%x98%x98']
 @bot.message_handler(commands=['help'])
 def help_message(message):
     bot.send_message(message.chat.id, '/help :\n')
@@ -23,6 +23,11 @@ def start_message(message):
     else: us="-"
     new_user(message.chat.id,name,us)
     questions_start(message)
+
+@bot.message_handler(commands=['question'])
+def questions_start(message):
+    q=next_question(message.chat.id, "")
+    question_ask(message.chat.id,q)
 
 def question_ask(user_id,question): #Получает ID и вопрос. создает клаву и выводит вопрос
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
