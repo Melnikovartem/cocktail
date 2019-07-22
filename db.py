@@ -16,9 +16,8 @@ def exec(ask):
         cur.execute(ask)
         return cur
 
-def new_user(tel_id, name):
-    exec(f"INSERT INTO users (tel_id, name) VALUES ('{tel_id}','{name}'")
-
+def new_user(tel_id, name, tag):
+    pass
 #bot interactions
 
 def new_theme(old_themes):
@@ -44,22 +43,7 @@ def start_poll(tel_id):
         return -1 #done poll
 
 def next_question(tel_id, ans):
-    if tel_id in last_id:
-        if ans.isdigit():
-            if int(ans)<=9:
-                if int(ans)>0:
-                    exec(f"INSERT INTO answers (quest_id, ans, time) VALUES ({last_id[tel_id]}, {ans}, {time()})")
-                    theme = new_theme(themes[tel_id])
-                    if theme != -1:
-                        themes[tel_id].append(theme)
-                        quest, last_id[tel_id] = random_question(theme)
-                        return quest
-                    else:
-                        return -1 #done poll
-        return exec(f"SELECT quest FROM questions WHERE id= {last_id[tel_id]}").fetchone()[0]
-    else:
-        return start_poll(tel_id)
-
+	return "qustion"
 def get_user(tel_id):
     return exec(f"SELECT id FROM users WHERE tel_id={tel_id}").fetchone()[0]
 
