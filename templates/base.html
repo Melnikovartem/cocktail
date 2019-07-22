@@ -8,11 +8,25 @@
     <title>Graph</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <style>
+      .hero.is-primary {
+        background-color: #FFFFFF;
+        color: #000000;
+      }
+      .hero.is-primary .title{
+        color: #000000;
+      }
+      .hero.is-primary a{
+        margin-left: 10%;
+        margin-right: 10%;
+
+      }
+    </style>
 </head>
 
 <body>
     <section class="hero is-primary is-fullheight">
-
         <div class="hero-body">
             <div class="container has-text-centered">
                {% block content %}

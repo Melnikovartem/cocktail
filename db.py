@@ -16,8 +16,21 @@ def exec(ask):
         cur.execute(ask)
         return cur
 
-def new_user(tel_id, name):
-    exec(f"INSERT INTO users (tel_id, name) VALUES ('{tel_id}','{name}')")
+def new_user(tel_id, name, tag):
+    if not exec(f"SELECT name FROM users WHERE tel_id ='{tel_id}'").fetchone():
+        exec(f"INSERT INTO users (tel_id, name, tag) VALUES ('{tel_id}','{name}','{tag}')")
+
+def get_user(tel_id):
+    return exec(f"SELECT name FROM users WHERE tel_id ='{tel_id}'").fetchone()[0]
+
+def all_users():
+    return list(map(lambda x: x[0], exec(f'SELECT tele_id FROM users').fetchall()))
+
+def lazy():
+    users = all_users()
+    for user in last_id:
+        users.remove(user)
+    return users
 
 #bot interactions
 
@@ -64,7 +77,13 @@ def all_themes():
     return exec("SELECT theme, id FROM themes").fetchall()
 
 def all_data(theme_id):
-    return exec(f'SELECT answers.ans, answers.time FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE questions.theme_id = {theme_id}').fetchall()
+    return exec(f'SELECT answers.ans, answers.time, answers.user_id FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE questions.theme_id = {theme_id}').fetchall()
 
-def personal_data():
-    return 0
+def all_data_period(time):
+    return exec(f'SELECT answers.ans, answers.user_id, questions.id FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE answers.time>{time} AND answers.time<{time+86400}').fetchall()
+
+def personal_data_period(time, user_id):
+    return exec(f"SELECT answers.ans, questions.id FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE answers.time>{time} AND answers.time<{time+86400} AND answers.user_id='{user_id}'").fetchall()
+
+def get_theme(question_id):
+    return exec(f'SELECT themes.theme FROM questions INNER JOIN themes ON questions.theme_id=themes.id WHERE questions.id={question_id}').fetchone()[0]

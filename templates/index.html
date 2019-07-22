@@ -2,6 +2,7 @@
 
 {% block content %}
 
+<h1 class ="title">Данные GoTo!</h1>
 <div id=pulse ></div>
 <script>
 
@@ -39,7 +40,7 @@ var layout = {
 
 	PULSE = document.getElementById('pulse');
 
-  {% if data %}
+
     {% for dat in data %}
       Plotly.plot( PULSE, [{
       y: {{ dat[1] }},
@@ -47,7 +48,7 @@ var layout = {
       name: '{{ dat[0] }}'
     }], layout);
       {% endfor %}
-  {% endif %}
+
 </script>
 
 {% endblock %}
