@@ -10,16 +10,50 @@
 <div id=pulse ></div>
 
 <script>
+
+  var updatemenus=[
+    {
+        buttons: [
+            {
+                args: ['type', 'scatter'],
+                label: 'Scatter',
+                method: 'restyle'
+            },
+            {
+                args: ['type', 'bar'],
+                label:'Bar',
+                method:'restyle'
+            }
+        ],
+        direction: 'left',
+        pad: {'r': 10, 't': 10},
+        showactive: true,
+        type: 'buttons',
+        x: 0.1,
+        xanchor: 'left',
+        y: 1.1,
+        yanchor: 'top'
+    }
+]
+
+
+
+var layout = {
+    autosize: true,
+    updatemenus: updatemenus,
+  }
+
 	PULSE = document.getElementById('pulse');
-    {% if data %}
-      {% for dat in data %}
-      	Plotly.plot( PULSE, [{
-      	y: {{ dat[1] }},
-      	x: [{% for val in dat[2] %}'{{ val }}', {% endfor %}],
-        name: '{{ dat[0] }}'
-          }]);
-        {% endfor %}
-    {% endif %}
+
+  {% if data %}
+    {% for dat in data %}
+      Plotly.plot( PULSE, [{
+      y: {{ dat[1] }},
+      x: [{% for val in dat[2] %}'{{ val }}', {% endfor %}],
+      name: '{{ dat[0] }}'
+    }], layout);
+      {% endfor %}
+  {% endif %}
 </script>
 </body>
 </html>

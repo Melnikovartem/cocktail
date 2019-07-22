@@ -13,12 +13,17 @@ def index():
     for theme in themes:
         all = all_data(theme[1])
         time = []
-        ans = []
+        time_count = {}
+        ans =[]
         for one in all:
-            time.append(datetime.fromtimestamp(one[1]).strftime("%m-%d"))
-            ans.append(one[0])
+            format_time = datetime.fromtimestamp(one[1]).strftime("%m-%d")
+            if format_time not in time:
+                time.append(format_time)
+                time_count[format_time]=[]
+            time_count[format_time].append(one[0])
+        for time_val in time_count:
+            ans.append(sum(time_count[time_val])/len(time_count[time_val]))
         data.append([theme[0], ans, time])
-
     return render_template("index.html", data=data)
 
 
