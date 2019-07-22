@@ -19,21 +19,7 @@ def exec(ask):
 def new_user(tel_id, name):
     exec(f"INSERT INTO users (tel_id, name) VALUES ('{tel_id}','{name}'")
 
-def is_user(tel_id):
-    user = exec(f"SELECT * FROM users WHERE tel_id='{tel_id}'")
-    if user:
-        return True
-    else:
-        return False
-
-def start_poll(tel_id):
-    if tel_id not in last_id:
-        themes[tel_id] = [new_theme([])]
-        quest, last_id[tel_id]= random_question(themes[tel_id][0])
-        return quest
-    else:
-        return -1 #done poll
-
+#bot interactions
 
 def new_theme(old_themes):
     #return -1 if no more themes
@@ -49,6 +35,13 @@ def random_question(theme_id):
     questions=exec(f"SELECT quest, id FROM questions WHERE theme='{ theme_id }'").fetchall()
     return choice(questions)
 
+def start_poll(tel_id):
+    if tel_id not in last_id:
+        themes[tel_id] = [new_theme([])]
+        quest, last_id[tel_id]= random_question(themes[tel_id][0])
+        return quest
+    else:
+        return -1 #done poll
 
 def next_question(tel_id, ans):
     if tel_id in last_id:
@@ -63,6 +56,6 @@ def next_question(tel_id, ans):
                         return quest
                     else:
                         return -1 #done poll
-        return -2 #try again
+        return exec(f"SELECT quest FROM questions WHERE id= {last_id[tel_id]}").fetchone()[0]
     else:
         return start_poll(tel_id)
