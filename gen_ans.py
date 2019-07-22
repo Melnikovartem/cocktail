@@ -1,7 +1,18 @@
 from db import next_question
 from random import randint
+from time import sleep
 users = ['fshfwqe', 'fsh2fa4', "wowmem", "hihi", "kwoman"]
 
-for user in users:
-    while next_question(user, str(randint(1,9))) != -1:
-        pass
+from threading import Thread
+
+def f():
+    while True:
+        print(3)
+        sleep(3)
+
+
+Thread(target=f).start()
+
+while True:
+    print(5)
+    sleep(5)
