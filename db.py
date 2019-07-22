@@ -37,11 +37,11 @@ def lazy():
 
 def new_theme(old_themes):
     #return -1 if no more themes
-    themes = exec("SELECT id FROM themes").fetchall()
+    themes = exec("SELECT id FROM themes ORDER BY id").fetchall()
     for old_theme in old_themes:
         themes.remove((old_theme,))
     if themes:
-        return choice(themes[0])
+        return themes[0][0]
     else:
         return -1
 
