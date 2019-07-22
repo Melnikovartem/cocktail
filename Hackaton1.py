@@ -23,10 +23,12 @@ def start_message(message):
     if(message.chat.username!=0): us=message.chat.username
     else: us="-"
     new_user(message.chat.id,name,us)
+    questions_start(message)
 
-def questions_start(user_id):
-    q=next_question(user_id, "")
-    question_ask(user_id,q)
+@bot.message_handler(commands=['question'])
+def questions_start(message):
+    q=next_question(message.chat.id, "")
+    question_ask(message.chat.id,q)
 
 def question_ask(user_id,question): #Получает ID и вопрос. создает клаву и выводит вопрос
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
@@ -37,8 +39,7 @@ def question_ask(user_id,question): #Получает ID и вопрос. соз
 
 @bot.message_handler(content_types=['text'])
 def send_text(message):
-    #res=next_question(message.chat.id,int(message.text))
-    res='3*3'
+    res=next_question(message.chat.id,message.text)
     if(res==-2):
         bot.send_message(message.chat.id,"Вопрос уже снят с рассмотрения")
     if(res==-1):
@@ -49,21 +50,4 @@ def notification(user_id):
     bot.send_message(user_id,"Не забудьте ответить на наши вопросы")
     res=next_question(message.chat.id,0)
 
-
-def f():
-    a=0
-    n=0
-    while True:
-        print("-",n)
-        if(n%12==1):
-            for i in all_users():
-                questions_start(i)
-        if(n%12==2):
-            for i in lazy(): notification(i)
-        if(n%12==4):
-            for i in lazy(): bot.send_message(i,"ОПРОС ЗАКРЫТ")
-        n+=1
-        sleep(40)
-
-Thread(target=f).start()
 bot.polling()
