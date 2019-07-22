@@ -11,10 +11,15 @@
 
 <script>
 	PULSE = document.getElementById('pulse');
-	Plotly.plot( PULSE, [{
-	x: {{ x_data }},
-	y: {{ y_data }}
-}], {margin: { t: 0 } } );
+    {% if data %}
+      {% for dat in data %}
+      	Plotly.plot( PULSE, [{
+      	y: {{ dat[1] }},
+      	x: [{% for val in dat[2] %}'{{ val }}', {% endfor %}],
+        name: '{{ dat[0] }}'
+          }]);
+        {% endfor %}
+    {% endif %}
 </script>
 </body>
 </html>

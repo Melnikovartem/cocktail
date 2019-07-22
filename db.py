@@ -59,3 +59,15 @@ def next_question(tel_id, ans):
         return exec(f"SELECT quest FROM questions WHERE id= {last_id[tel_id]}").fetchone()[0]
     else:
         return start_poll(tel_id)
+
+def get_user(tel_id):
+    return exec(f"SELECT id FROM users WHERE tel_id={tel_id}").fetchone()[0]
+
+def all_themes():
+    return exec("SELECT theme, id FROM themes").fetchall()
+
+def all_data(theme_id):
+    return exec(f'SELECT answers.ans, answers.time FROM answers INNER JOIN questions ON answers.quest_id=questions.id WHERE questions.theme = {theme_id}').fetchall()
+
+def personal_data():
+    return 0
